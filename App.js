@@ -1,20 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import HomeScreen from "./screens/HomeScreen";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+import StackNavigation from "./StackNavigation";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    // When ever use scrollview with safe area view always use contentInsetAdjustmetBehaviour="automatic"
+    <Provider store={store}>
+      <SafeAreaView style={{ backgroundColor: "#f0f0f0", flex: 1 }}>
+        <StatusBar style="auto" />
+        {/* <HomeScreen /> */}
+        <StackNavigation />
+      </SafeAreaView>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
