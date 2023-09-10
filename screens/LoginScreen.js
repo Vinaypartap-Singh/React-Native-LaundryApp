@@ -1,17 +1,66 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { themeColor } from "../theme";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (!authUser) {
+        console.log("Login");
+      }
+      if (authUser) {
+        navigation.replace("Home");
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const loginUser = () => {
+    if (email === "" || password === "") {
+      Alert.alert("Invalid Details", "Please fill all the details to login", [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Ok",
+          style: "default",
+        },
+      ]);
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigation.navigate("Home");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          Alert.alert("Error", errorMessage, [
+            {
+              text: "Ok",
+              style: "cancel",
+            },
+          ]);
+        });
+    }
+  };
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <View style={{ marginTop: 200 }}>
@@ -41,6 +90,11 @@ export default function LoginScreen() {
           <AntDesign name="mail" size={24} color={"black"} />
           <TextInput
             placeholder="Email"
+            autoCorrect={false}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "lightgrey",
@@ -62,6 +116,8 @@ export default function LoginScreen() {
           <TextInput
             secureTextEntry
             placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "lightgrey",
@@ -72,6 +128,7 @@ export default function LoginScreen() {
       </View>
       <View style={{ marginTop: 20, alignItems: "center" }}>
         <TouchableOpacity
+          onPress={loginUser}
           style={{
             backgroundColor: themeColor.color,
             paddingHorizontal: 80,
