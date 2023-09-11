@@ -1,6 +1,5 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import HomeScreen from "./screens/HomeScreen";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import StackNavigation from "./StackNavigation";
