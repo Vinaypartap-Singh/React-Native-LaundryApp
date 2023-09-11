@@ -1,4 +1,5 @@
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,12 +10,19 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { decreaseQuantity, increaseQuantity } from "../store/cartSlice";
+import {
+  cleanCart,
+  decreaseQuantity,
+  increaseQuantity,
+} from "../store/cartSlice";
 import { decrementQty, increamentQty } from "../store/productSlice";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 export default function CartScreen() {
   const route = useRoute();
   console.log(route.params);
+  const user = auth.currentUser.uid;
   const addressdata = route.params;
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -22,6 +30,27 @@ export default function CartScreen() {
   const total = cart
     .map((item) => item.quantity * item.price)
     .reduce((curr, prev) => curr + prev, 0);
+
+  const placeOrder = async () => {
+    Alert.alert("Order Placed", "Your Order has been placed successfully", [
+      {
+        text: "Ok",
+        style: "default",
+      },
+    ]);
+    navigation.navigate("Profile");
+    dispatch(cleanCart());
+    await setDoc(
+      doc(db, "users", `${user}`),
+      {
+        orders: { ...cart },
+        pickUpDetails: route.params,
+      },
+      {
+        merge: true,
+      }
+    );
+  };
   return (
     <ScrollView style={{ flex: 1 }}>
       {total === 0 ? (
@@ -297,6 +326,7 @@ export default function CartScreen() {
               }}
             >
               <TouchableOpacity
+                onPress={placeOrder}
                 style={{
                   backgroundColor: "#fb5c63",
                   paddingHorizontal: 40,
@@ -314,7 +344,7 @@ export default function CartScreen() {
                 }}
               >
                 <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Pay Now
+                  Place Order Now
                 </Text>
               </TouchableOpacity>
             </View>

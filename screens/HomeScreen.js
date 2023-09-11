@@ -187,7 +187,7 @@ export default function HomeScreen() {
               <Text>{displayCurrentAddress}</Text>
             </View>
           </View>
-          <View>
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
             <Image
               width={50}
               height={50}
@@ -196,7 +196,7 @@ export default function HomeScreen() {
                 uri: "https://lh3.googleusercontent.com/ogw/AAEL6sh_yqHq38z35QMy5Fnb8ZIxicdxCIVM9PeBD2j-=s64-c-mo",
               }}
             />
-          </View>
+          </TouchableOpacity>
         </View>
         {/* Search Bar  */}
         <View
