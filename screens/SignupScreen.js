@@ -1,18 +1,73 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { themeColor } from "../theme";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { auth, db } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const registerAccount = () => {
+    if (email === "" || password === "" || phoneNumber === "") {
+      Alert.alert(
+        "Invalid Details",
+        "Please fill all the details to continute",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancelled"),
+            style: "cancel",
+          },
+          {
+            text: "Ok",
+            onPress: () => console.log("Ok"),
+            style: "destructive",
+          },
+        ]
+      );
+    } else {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const uid = user.uid;
+          setDoc(doc(db, "users", `${uid}`), {
+            email: email,
+            phoneNumber: phoneNumber,
+          });
+          Alert.alert(
+            "Success",
+            "Your account has been created successfully. Login to continute",
+            [
+              {
+                text: "Ok",
+                style: "cancel",
+              },
+            ]
+          );
+          navigation.navigate("Login");
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          Alert.alert("Error", errorMessage);
+        });
+    }
+  };
+
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <View style={{ marginTop: 200 }}>
@@ -42,6 +97,11 @@ export default function SignupScreen() {
           <AntDesign name="mail" size={24} color={"black"} />
           <TextInput
             placeholder="Email"
+            autoCorrect={false}
+            keyboardType="email-address"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            autoCapitalize="none"
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "lightgrey",
@@ -63,6 +123,8 @@ export default function SignupScreen() {
           <TextInput
             secureTextEntry
             placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "lightgrey",
@@ -83,6 +145,8 @@ export default function SignupScreen() {
           <Feather name="phone" size={24} color="black" />
           <TextInput
             placeholder="Phone Number"
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(text)}
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "lightgrey",
@@ -93,6 +157,7 @@ export default function SignupScreen() {
       </View>
       <View style={{ marginTop: 20, alignItems: "center" }}>
         <TouchableOpacity
+          onPress={registerAccount}
           style={{
             backgroundColor: themeColor.color,
             paddingHorizontal: 80,
