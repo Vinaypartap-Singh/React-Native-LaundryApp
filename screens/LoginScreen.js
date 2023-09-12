@@ -128,6 +128,8 @@ export default function LoginScreen() {
               <AntDesign name="key" size={24} color="black" />
               <TextInput
                 secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
                 placeholder="Password"
                 value={password}
                 onChangeText={(text) => setPassword(text)}
