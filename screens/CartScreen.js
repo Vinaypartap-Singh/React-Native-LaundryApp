@@ -16,7 +16,7 @@ import {
   increaseQuantity,
 } from "../store/cartSlice";
 import { decrementQty, increamentQty } from "../store/productSlice";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 export default function CartScreen() {
@@ -40,6 +40,7 @@ export default function CartScreen() {
     ]);
     navigation.navigate("Profile");
     dispatch(cleanCart());
+
     await setDoc(
       doc(db, "users", `${user}`),
       {
@@ -312,7 +313,7 @@ export default function CartScreen() {
                       fontWeight: "bold",
                     }}
                   >
-                    {total + 20}
+                    $ {total + 20}
                   </Text>
                 </View>
               </View>

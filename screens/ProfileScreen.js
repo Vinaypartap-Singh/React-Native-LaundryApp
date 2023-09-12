@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Image,
@@ -18,6 +19,7 @@ import { AntDesign } from "@expo/vector-icons";
 export default function ProfileScreen() {
   const { width, height } = Dimensions.get("window");
   const [orderDetails, setOrderDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const user = auth.currentUser;
   //   console.log(user);
@@ -32,12 +34,14 @@ export default function ProfileScreen() {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       const docRef = doc(db, "users", `${user.uid}`);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists) {
         const data = docSnap.data();
         setOrderDetails(data.orders);
+        setLoading(false);
       } else {
         console.log("No Document");
       }
@@ -141,12 +145,20 @@ export default function ProfileScreen() {
                   );
                 })
               ) : (
-                <Text>No Orders</Text>
+                <ActivityIndicator size={"large"} color={themeColor.color} />
               )}
             </View>
           ) : (
-            <View>
-              <Text>No Orders</Text>
+            <View style={{ marginTop: 20 }}>
+              {loading ? (
+                <View style={{ marginTop: 20 }}>
+                  <ActivityIndicator size={"large"} color={themeColor.color} />
+                </View>
+              ) : (
+                <View>
+                  <Text style={{ fontSize: 18 }}>No Order(s) Found</Text>
+                </View>
+              )}
             </View>
           )}
         </View>
