@@ -245,7 +245,7 @@ export default function HomeScreen() {
                 <Text
                   style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
                 >
-                  {cart.length} Items | ${total}
+                  {cart.length} Items | ₹{total}
                 </Text>
                 <Text
                   style={{ color: "white", fontWeight: "bold", fontSize: 14 }}

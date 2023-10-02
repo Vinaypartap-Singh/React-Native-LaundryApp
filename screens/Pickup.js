@@ -250,7 +250,7 @@ export default function Pickup() {
               <Text
                 style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
               >
-                {cart.length} Item(s) | ${total}
+                {cart.length} Item(s) | ₹{total}
               </Text>
               <Text
                 style={{ color: "white", fontWeight: "bold", fontSize: 14 }}

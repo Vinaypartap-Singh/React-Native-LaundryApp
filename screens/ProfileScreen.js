@@ -49,6 +49,7 @@ export default function ProfileScreen() {
 
     fetchData();
   }, []);
+
   return (
     <View style={{ flex: 1 }}>
       {user ? (
@@ -105,44 +106,46 @@ export default function ProfileScreen() {
               {typeof orderDetails === "object" ? (
                 Object.keys(orderDetails).map((key, index) => {
                   const value = orderDetails[key];
-                  return (
-                    <View
-                      key={index}
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        width: width - 60,
-                        marginTop: 20,
-                        backgroundColor: "white",
-                        paddingHorizontal: 20,
-                        paddingVertical: 18,
-                        alignItems: "center",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <Image
-                        source={{ uri: value.image }}
-                        style={{ height: 70, width: 70 }}
-                      />
-                      <Text
-                        style={{ fontWeight: "500", fontSize: 18 }}
-                      >{`${key}: ${value.name}`}</Text>
-                      <View>
-                        <Text style={{ fontSize: 18, fontWeight: "500" }}>
-                          Quantity: {value.quantity}
-                        </Text>
+                  return value.cart.map((data, index) => {
+                    return (
+                      <View
+                        key={data.url}
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          width: width - 60,
+                          marginTop: 20,
+                          backgroundColor: "white",
+                          paddingHorizontal: 20,
+                          paddingVertical: 18,
+                          alignItems: "center",
+                          borderRadius: 10,
+                        }}
+                      >
+                        <Image
+                          source={{ uri: data.image }}
+                          style={{ height: 70, width: 70 }}
+                        />
                         <Text
-                          style={{
-                            fontSize: 18,
-                            marginTop: 10,
-                            fontWeight: "500",
-                          }}
-                        >
-                          Price: ${value.price}
-                        </Text>
+                          style={{ fontWeight: "500", fontSize: 18 }}
+                        >{`${data.name}`}</Text>
+                        <View>
+                          <Text style={{ fontSize: 18, fontWeight: "500" }}>
+                            Quantity: {data.quantity}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              marginTop: 10,
+                              fontWeight: "500",
+                            }}
+                          >
+                            Price: ₹{data.price}
+                          </Text>
+                        </View>
                       </View>
-                    </View>
-                  );
+                    );
+                  });
                 })
               ) : (
                 <ActivityIndicator size={"large"} color={themeColor.color} />
