@@ -16,7 +16,7 @@ import {
   increaseQuantity,
 } from "../store/cartSlice";
 import { decrementQty, increamentQty } from "../store/productSlice";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 export default function CartScreen() {
@@ -32,26 +32,46 @@ export default function CartScreen() {
     .reduce((curr, prev) => curr + prev, 0);
 
   const placeOrder = async () => {
-    Alert.alert("Order Placed", "Your Order has been placed successfully", [
-      {
-        text: "Ok",
-        style: "default",
-      },
-    ]);
-    navigation.navigate("Profile");
-    dispatch(cleanCart());
+    try {
+      const docRef = doc(db, "users", `${user}`);
+      const orderSnap = await getDoc(docRef);
 
-    await setDoc(
-      doc(db, "users", `${user}`),
-      {
-        orders: { ...cart },
-        pickUpDetails: route.params,
-      },
-      {
-        merge: true,
+      if (orderSnap.exists()) {
+        const existingOrderDetails = orderSnap.data().orders || [];
+
+        existingOrderDetails.push({ cart, pickUpDetails: route?.params });
+
+        await setDoc(
+          docRef,
+          {
+            orders: existingOrderDetails,
+          },
+          { merge: true }
+        );
+
+        Alert.alert(
+          "Order Placed",
+          "Your document has been saved successfully",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              style: "default",
+            },
+          ],
+          { cancelable: true }
+        );
+
+        navigation.replace("Profile");
       }
-    );
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <ScrollView style={{ flex: 1 }}>
       {total === 0 ? (
