@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HorizontalDatepicker from "@awrminkhodaei/react-native-horizontal-datepicker";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -15,9 +15,12 @@ import { useNavigation } from "@react-navigation/native";
 export default function Pickup() {
   const navigation = useNavigation();
   const [address, setAddress] = useState("");
-  const [selectedDate, setSelectedDate] = useState("2023-09-9");
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedPickupTime, setSelectedPickupTime] = useState([]);
   const [selectedDelivery, setSelectedDelivery] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
   const cart = useSelector((state) => state.cart.cart);
   const total = cart
     .map((item) => item.quantity * item.price)
@@ -102,6 +105,18 @@ export default function Pickup() {
     }
   };
 
+  useEffect(() => {
+    const currentDate = new Date();
+    setStartDate(currentDate);
+    const endDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
+
+    setEndDate(endDate);
+  }, []);
+
   return (
     <>
       <ScrollView
@@ -131,9 +146,9 @@ export default function Pickup() {
           <Text style={{ fontWeight: "500", fontSize: 18 }}>Pickup Date</Text>
           <HorizontalDatepicker
             mode="gregorian"
-            startDate={new Date("2023-09-9")}
-            endDate={new Date("2023-9-31")}
-            initialSelectedDate={new Date("2023-09-9")}
+            startDate={startDate}
+            endDate={endDate}
+            initialSelectedDate={new Date()}
             onSelectedDateChange={(date) => setSelectedDate(date)}
             selectedItemWidth={170}
             unselectedItemWidth={38}
