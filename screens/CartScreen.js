@@ -170,7 +170,7 @@ export default function CartScreen() {
                     </View>
                     {/* Total */}
                     <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                      $ {data.price * data.quantity}
+                      ₹{data.price * data.quantity}
                     </Text>
                   </View>
                 </View>
@@ -333,7 +333,7 @@ export default function CartScreen() {
                       fontWeight: "bold",
                     }}
                   >
-                    $ {total + 20}
+                    ₹{total}
                   </Text>
                 </View>
               </View>
