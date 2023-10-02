@@ -114,6 +114,7 @@ export default function Pickup() {
             Enter Your Address
           </Text>
           <TextInput
+            autoCorrect={false}
             onChangeText={(e) => setAddress(e)}
             style={{
               borderWidth: 1,
