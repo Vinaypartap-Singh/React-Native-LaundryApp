@@ -70,7 +70,7 @@ export default function LoginScreen() {
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          <ActivityIndicator size={25} color={themeColor.color} />
+          <ActivityIndicator size={"large"} color={themeColor.color} />
         </View>
       ) : (
         <View>
