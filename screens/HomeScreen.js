@@ -1,9 +1,7 @@
 import {
   Alert,
   Image,
-  SafeAreaView,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
