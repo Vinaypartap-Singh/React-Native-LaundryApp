@@ -51,7 +51,7 @@ export default function CartScreen() {
 
         Alert.alert(
           "Order Placed",
-          "Your document has been saved successfully",
+          "Your order has been placed successfully.",
           [
             {
               text: "Cancel",
