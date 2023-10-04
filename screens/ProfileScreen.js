@@ -19,6 +19,7 @@ import { AntDesign } from "@expo/vector-icons";
 export default function ProfileScreen() {
   const { width, height } = Dimensions.get("window");
   const [orderDetails, setOrderDetails] = useState(null);
+  console.log(orderDetails);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const user = auth.currentUser;
