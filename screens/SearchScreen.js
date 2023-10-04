@@ -8,7 +8,7 @@ import {
 import React, { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DressItem from "../components/DressItem";
-import { themeColor } from "../theme";
+
 import { Entypo } from "@expo/vector-icons";
 
 export default function SearchScreen() {
