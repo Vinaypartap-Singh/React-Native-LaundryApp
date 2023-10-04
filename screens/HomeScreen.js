@@ -197,7 +197,12 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
         {/* Search Bar  */}
-        <View
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Search", {
+              product: product,
+            })
+          }
           style={{
             flexDirection: "row",
             marginHorizontal: 10,
@@ -214,7 +219,7 @@ export default function HomeScreen() {
             style={{ fontSize: 18 }}
           />
           <Feather name={"search"} size={28} color={"#fb5c63"} />
-        </View>
+        </TouchableOpacity>
         {/* Hero Image Component */}
         <Hero />
         {/* Services Component */}
