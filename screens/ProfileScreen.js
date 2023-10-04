@@ -19,7 +19,6 @@ import { AntDesign } from "@expo/vector-icons";
 export default function ProfileScreen() {
   const { width, height } = Dimensions.get("window");
   const [orderDetails, setOrderDetails] = useState(null);
-  console.log(orderDetails);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const user = auth.currentUser;
@@ -94,23 +93,37 @@ export default function ProfileScreen() {
           </TouchableOpacity>
           {orderDetails !== null ? (
             <View>
-              <Text
-                style={{
-                  fontWeight: "600",
-                  fontSize: 20,
-                  textAlign: "left",
-                  marginTop: 20,
-                }}
-              >
-                Your Orders
-              </Text>
+              {typeof orderDetails === "object" ? (
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    fontSize: 20,
+                    textAlign: "left",
+                    marginTop: 20,
+                  }}
+                >
+                  Your Order
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    fontSize: 20,
+                    textAlign: "left",
+                    marginTop: 20,
+                  }}
+                >
+                  No Order(s) Found
+                </Text>
+              )}
+
               {typeof orderDetails === "object" ? (
                 Object.keys(orderDetails).map((key, index) => {
                   const value = orderDetails[key];
-                  return value.cart.map((data, index) => {
+                  return value.cart?.map((data, index) => {
                     return (
                       <View
-                        key={data.url}
+                        key={(index += 1)}
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-between",
@@ -149,7 +162,31 @@ export default function ProfileScreen() {
                   });
                 })
               ) : (
-                <ActivityIndicator size={"large"} color={themeColor.color} />
+                <View>
+                  {typeof orderDetails === "object" ? (
+                    <ActivityIndicator
+                      size={"large"}
+                      color={themeColor.color}
+                    />
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => navigation.replace("Home")}
+                      style={{
+                        borderWidth: 1,
+                        marginVertical: 10,
+                        paddingVertical: 10,
+                        borderRadius: 10,
+                        backgroundColor: themeColor.color,
+                        borderColor: themeColor.color,
+                        marginTop: 20,
+                      }}
+                    >
+                      <Text style={{ textAlign: "center", fontWeight: 600 }}>
+                        Order Now
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               )}
             </View>
           ) : (
